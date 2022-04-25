@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed under European Union Public Licence (EUPL) version 1.2.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>gov.mfin</groupId>
+  <artifactId>centc434-validation-srbdt</artifactId>
+  <version>1.0.0</version>
+  <description>EN16931 - CIUS/ES for Serbia's domestic trade - validation rules</description>
+  <url>https://github.com/vasiljevic/en16931-srbdt-va</url>
+  <build>
+    <directory>${project.basedir}</directory>
+    <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>  
+    <plugins>
+      <plugin>
+        <groupId>com.helger.maven</groupId>
+        <artifactId>ph-schematron-maven-plugin</artifactId>
+        <version>6.3.0</version>
+        <configuration>
+          <schematronDirectory>schematron</schematronDirectory>
+          <schematronPattern>*-validation.sch</schematronPattern>
+          <xsltDirectory>xslt</xsltDirectory>
+          <xsltHeader> Schematron version 1.3.8 - Last update: 2022-04-08 </xsltHeader>
+          <showProgress>true</showProgress>
+          <xmlDirectory>examples/correct</xmlDirectory>
+          <svrlDirectory>examples/correct-svrl</svrlDirectory>
+          <failFast>false</failFast>
+          <xmlErrorDirectory>examples/erroneous</xmlErrorDirectory>
+          <svrlErrorDirectory>examples/erroneous-svrl</svrlErrorDirectory>
+          <schematronProcessingEngine>XSLT</schematronProcessingEngine>
+          <schematronFile>xslt/EN16931-UBL-srbdt-validation.xslt</schematronFile>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

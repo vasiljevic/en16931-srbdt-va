@@ -200,6 +200,15 @@
         <xsl:apply-templates />
       </svrl:active-pattern>
       <xsl:apply-templates mode="M13" select="/" />
+      <svrl:active-pattern>
+        <xsl:attribute name="document">
+          <xsl:value-of select="document-uri(/)" />
+        </xsl:attribute>
+        <xsl:attribute name="id">UBL-srbdt</xsl:attribute>
+        <xsl:attribute name="name">UBL-srbdt</xsl:attribute>
+        <xsl:apply-templates />
+      </svrl:active-pattern>
+      <xsl:apply-templates mode="M14" select="/" />
     </svrl:schematron-output>
   </xsl:template>
 
@@ -15479,5 +15488,33 @@
   <xsl:template match="text()" mode="M13" priority="-1" />
   <xsl:template match="@*|node()" mode="M13" priority="-2">
     <xsl:apply-templates mode="M13" select="@*|*" />
+  </xsl:template>
+
+<!--PATTERN UBL-srbdt-->
+
+
+	<!--RULE -->
+<xsl:template match="cbc:InvoiceTypeCode | cbc:CreditNoteTypeCode" mode="M14" priority="1000">
+    <svrl:fired-rule context="cbc:InvoiceTypeCode | cbc:CreditNoteTypeCode" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(self::cbc:InvoiceTypeCode and                  ( (not(contains(normalize-space(.), ' ')) and                     contains(' 380 383 386 ',                         concat(' ', normalize-space(.), ' '))))) or              (self::cbc:CreditNoteTypeCode and ((not(contains(normalize-space(.), ' ')) and                      contains(' 381 ', concat(' ', normalize-space(.), ' ')))))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(self::cbc:InvoiceTypeCode and ( (not(contains(normalize-space(.), ' ')) and contains(' 380 383 386 ', concat(' ', normalize-space(.), ' '))))) or (self::cbc:CreditNoteTypeCode and ((not(contains(normalize-space(.), ' ')) and contains(' 381 ', concat(' ', normalize-space(.), ' ')))))">
+          <xsl:attribute name="id">RS-R-002</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RS-R-002]- Tip dokumenta može biti samo 380, 381, 383 ili 386</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M14" select="@*|*" />
+  </xsl:template>
+  <xsl:template match="text()" mode="M14" priority="-1" />
+  <xsl:template match="@*|node()" mode="M14" priority="-2">
+    <xsl:apply-templates mode="M14" select="@*|*" />
   </xsl:template>
 </xsl:stylesheet>
