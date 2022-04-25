@@ -1,3 +1,13 @@
+# EN-16931 - CIUS/ES for Serbia's domestic trade - Validation artefacts
+
+Thi is a customization of the *Official Schematron eInvoicing-EN16931 artefacts for CEN/TC 434* in accordance to the Serbian core invoice usage specification and extension specification aplicable to the domestic trade in Serbia.
+
+---
+
+This is a fork of the repository [ConnectingEurope/eInvoicing-EN16931](https://github.com/ConnectingEurope/eInvoicing-EN16931). Below is the original Readme:
+
+---
+
 # CEN/TC 434 - EN-16931 - Validation artefacts
 
 Official Schematron eInvoicing-EN16931 artefacts for CEN/TC 434.
