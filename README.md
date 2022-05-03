@@ -2,7 +2,7 @@
 
 *This repository is under construction!*
 
-This is a customization of the *Official Schematron eInvoicing-EN16931 artefacts for CEN/TC 434* in accordance to the Serbian core invoice usage specification and extension specification aplicable to the domestic trade in Serbia.
+This is a customization of the *Official Schematron eInvoicing-EN16931 artefacts for CEN/TC 434* in accordance to the Serbian core invoice usage specification and extension specification aplicable to the domestic trade in Serbia. For more information read the [README.md](srbdt/README.md) in subfolder *srbdt* (in Serbian).
 
 ---
 
