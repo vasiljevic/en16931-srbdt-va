@@ -91,7 +91,7 @@
       flag="fatal">[BR-CL-16]-Payment means in an invoice MUST be coded using UNCL4461 code list</assert>
   </rule>
   
-  <rule context="cac:TaxCategory/cbc:ID" flag="fatal">
+<!--  <rule context="cac:TaxCategory/cbc:ID" flag="fatal">
     <assert
       test="( ( not(contains(normalize-space(.),' ')) and contains( ' AE L M E S Z G O K B ',concat(' ',normalize-space(.),' ') ) ) )" 
       id="BR-CL-17" 
@@ -103,7 +103,7 @@
       test="( ( not(contains(normalize-space(.),' ')) and contains( ' AE L M E S Z G O K B ',concat(' ',normalize-space(.),' ') ) ) )" 
       id="BR-CL-18" 
       flag="fatal">[BR-CL-18]-Invoice tax categories MUST be coded using UNCL5305 code list</assert>
-  </rule>
+  </rule> -->
   
   <rule
     context="cac:AllowanceCharge[cbc:ChargeIndicator = false()]/cbc:AllowanceChargeReasonCode"
@@ -167,5 +167,5 @@
       id="BR-CL-26"
       flag="fatal">[BR-CL-26]-Delivery location identifier scheme identifier MUST belong to the ISO 6523 ICD code list</assert>
   </rule>
-  
+
 </pattern>

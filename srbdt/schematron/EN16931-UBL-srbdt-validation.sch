@@ -37,4 +37,9 @@
   <!-- SRBDT CIUS/ES rules -->
   <!-- =================== -->
   <include href="EN16931-UBL-srbdt.sch"/>
+  <include href="EN16931-UBL-srbdt-pdvcat-gen.sch"/>
+  <include href="EN16931-UBL-srbdt-pdvcat-r.sch"/>
+  <include href="EN16931-UBL-srbdt-pdvcat-oe.sch"/>
+  <include href="EN16931-UBL-srbdt-pdvcat-ss.sch"/>
+  <include href="EN16931-UBL-srbdt-pdvcat-n.sch"/>
 </schema>

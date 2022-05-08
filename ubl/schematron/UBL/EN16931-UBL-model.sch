@@ -211,7 +211,7 @@
   <param name="BR-B-01" value="(not(//cbc:IdentificationCode != 'IT') and (//cac:TaxCategory/cbc:ID ='B' or //cac:ClassifiedTaxCategory/cbc:ID = 'B')) or (not(//cac:TaxCategory/cbc:ID ='B' or //cac:ClassifiedTaxCategory/cbc:ID = 'B'))"/>
   <param name="BR-B-02" value="((//cac:TaxCategory/cbc:ID ='B' or //cac:ClassifiedTaxCategory/cbc:ID = 'B') and (not(//cac:TaxCategory/cbc:ID ='S' or //cac:ClassifiedTaxCategory/cbc:ID = 'S'))) or (not(//cac:TaxCategory/cbc:ID ='B' or //cac:ClassifiedTaxCategory/cbc:ID = 'B'))"/>  
   <param name="Invoice_Period " value="cac:InvoicePeriod"/>
-  <param name="Document_totals " value="cac:LegalMonetaryTotal"/>
+  <param name="Document_totals " value="/*/cac:LegalMonetaryTotal"/>
   <param name="Amount_due" value="/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PayableAmount "/>
   <param name="Payee_Financial_Account" value="cac:PaymentMeans[cbc:PaymentMeansCode='30' or cbc:PaymentMeansCode='58']/cac:PayeeFinancialAccount"/>
   <param name="Payee" value="cac:PayeeParty"/>
