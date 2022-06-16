@@ -15469,7 +15469,7 @@
 
 
 	<!--RULE -->
-<xsl:template match="cbc:CustomizationID" mode="M15" priority="1031">
+<xsl:template match="cbc:CustomizationID" mode="M15" priority="1034">
     <svrl:fired-rule context="cbc:CustomizationID" />
 
 		<!--ASSERT -->
@@ -15477,12 +15477,12 @@
       <xsl:when test="starts-with(normalize-space(.), 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022')" />
       <xsl:otherwise>
         <svrl:failed-assert test="starts-with(normalize-space(.), 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022')">
-          <xsl:attribute name="id">RS-R-001</xsl:attribute>
+          <xsl:attribute name="id">RSR-01</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-001]-Identifikator specifikacije (BT-24) treba da počinje sa 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022'</svrl:text>
+          <svrl:text>[RSR-01]-Identifikator specifikacije (BT-24) treba da počinje sa 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15490,7 +15490,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="sbt:SrbDtExt" mode="M15" priority="1030">
+<xsl:template match="sbt:SrbDtExt" mode="M15" priority="1033">
     <svrl:fired-rule context="sbt:SrbDtExt" />
 
 		<!--ASSERT -->
@@ -15498,12 +15498,12 @@
       <xsl:when test="starts-with(normalize-space(.), 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022')" />
       <xsl:otherwise>
         <svrl:failed-assert test="starts-with(normalize-space(.), 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022')">
-          <xsl:attribute name="id">RS-R-002</xsl:attribute>
+          <xsl:attribute name="id">RSR-02</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-002]-Identifikator specifikacije (BT-24) fakture koja koristi ekstenzije treba da počinje sa 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022'</svrl:text>
+          <svrl:text>[RSR-02]-Identifikator specifikacije (BT-24) fakture koja koristi ekstenzije treba da počinje sa 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.rs:srbdt:2022#conformant#urn:mfin.gov.rs:srbdtext:2022'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15511,7 +15511,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cbc:InvoiceTypeCode | cbc:CreditNoteTypeCode" mode="M15" priority="1029">
+<xsl:template match="cbc:InvoiceTypeCode | cbc:CreditNoteTypeCode" mode="M15" priority="1032">
     <svrl:fired-rule context="cbc:InvoiceTypeCode | cbc:CreditNoteTypeCode" />
 
 		<!--ASSERT -->
@@ -15519,12 +15519,90 @@
       <xsl:when test="(self::cbc:InvoiceTypeCode and                  ( (not(contains(normalize-space(.), ' ')) and                     contains(' 380 383 386 ',                         concat(' ', normalize-space(.), ' '))))) or              (self::cbc:CreditNoteTypeCode and ((not(contains(normalize-space(.), ' ')) and                      contains(' 381 ', concat(' ', normalize-space(.), ' ')))))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(self::cbc:InvoiceTypeCode and ( (not(contains(normalize-space(.), ' ')) and contains(' 380 383 386 ', concat(' ', normalize-space(.), ' '))))) or (self::cbc:CreditNoteTypeCode and ((not(contains(normalize-space(.), ' ')) and contains(' 381 ', concat(' ', normalize-space(.), ' ')))))">
-          <xsl:attribute name="id">RS-R-003</xsl:attribute>
+          <xsl:attribute name="id">RSR-03</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-003]-Tip dokumenta može biti samo 380, 381, 383 ili 386</svrl:text>
+          <svrl:text>[RSR-03]-Šifra vrste fakture (BT-3) treba da bude jedna od: 380, 381, 383 ili 386</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1031">
+    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="not(exists(cbc:TaxPointDate))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="not(exists(cbc:TaxPointDate))">
+          <xsl:attribute name="id">RSR-04</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-04]-Faktura ne treba da sadrži element datum poreske obaveze (BT-7), umesto toga treba koristiti šifru datuma poreske obaveze (BT-8)</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode)">
+          <xsl:attribute name="id">RSR-05</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-05]-Faktura treba da sadrži šifru datuma poreske obaveze (BT-8)</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode" mode="M15" priority="1030">
+    <svrl:fired-rule context="/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(not(contains(normalize-space(.), ' ')) and                     contains(' 35 432 3 ', concat(' ', normalize-space(.), ' ')))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(not(contains(normalize-space(.), ' ')) and contains(' 35 432 3 ', concat(' ', normalize-space(.), ' ')))">
+          <xsl:attribute name="id">RSR-06</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-06]-Šifra datuma poreske obaveze (BT-8) treba da bude jedna od: 35 (prema datumu prometa), 432 (prema datumu plaćanja) ili 3 (prema datumu izdavanja fakture)</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:BillingReference" mode="M15" priority="1029">
+    <svrl:fired-rule context="cac:BillingReference" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:InvoiceDocumentReference/cbc:IssueDate)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:InvoiceDocumentReference/cbc:IssueDate)">
+          <xsl:attribute name="id">RSR-07</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-07]-Referenca na prethodnu fakturu (BG-3) treba da sadrži datum izdavanja prethodne fakture (BT-26).</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15537,51 +15615,45 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not(exists(cbc:TaxPointDate))" />
+      <xsl:when test="not (cac:InvoicePeriod/cbc:DescriptionCode = '432') or exists(/ubl:Invoice/cbc:DueDate | /cn:CreditNote/cac:PaymentMeans/cbc:PaymentDueDate)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not(exists(cbc:TaxPointDate))">
-          <xsl:attribute name="id">RS-R-004</xsl:attribute>
+        <svrl:failed-assert test="not (cac:InvoicePeriod/cbc:DescriptionCode = '432') or exists(/ubl:Invoice/cbc:DueDate | /cn:CreditNote/cac:PaymentMeans/cbc:PaymentDueDate)">
+          <xsl:attribute name="id">RSR-08</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-004]-Faktura ne treba da sadrži element datum poreske obaveze (BT-7), umesto toga treba koristiti šifru datuma poreske obaveze (BT-8)</svrl:text>
+          <svrl:text>[RSR-08]-Kada šifra datuma poreske obaveze (BT-8) određuje da poreska obaveza nastaje prema datumu plaćanja (šifra 432) tada treba da je naveden datum dospeća plaćanja (BT-9)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode)" />
+      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode)">
-          <xsl:attribute name="id">RS-R-005</xsl:attribute>
+        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID)">
+          <xsl:attribute name="id">RSR-09</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-005]-Faktura treba da sadrži šifru datuma poreske obaveze (BT-8)</svrl:text>
+          <svrl:text>[RSR-09]-Faktura treba da sadrži PIB prodavca (BT-31)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode" mode="M15" priority="1027">
-    <svrl:fired-rule context="/ubl:Invoice/cac:InvoicePeriod/cbc:DescriptionCode | /cn:CreditNote/cac:InvoicePeriod/cbc:DescriptionCode" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(not(contains(normalize-space(.), ' ')) and                     contains(' 35 432 3 ', concat(' ', normalize-space(.), ' ')))" />
+      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) != 'VAT']/cbc:CompanyID)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(not(contains(normalize-space(.), ' ')) and contains(' 35 432 3 ', concat(' ', normalize-space(.), ' ')))">
-          <xsl:attribute name="id">RS-R-006</xsl:attribute>
+        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) != 'VAT']/cbc:CompanyID)">
+          <xsl:attribute name="id">RSR-10</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-006]-Šifra datuma poreske obaveze može biti samo 35 (prema datumu prometa), 432 (prema datumu plaćanja) ili 3 (prema datumu izdavanja fakture)</svrl:text>
+          <svrl:text>[RSR-10]-Faktura treba da sadrži identifikator registracije poreza na strani prodavca (BT-32)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15589,20 +15661,41 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:BillingReference" mode="M15" priority="1026">
-    <svrl:fired-rule context="cac:BillingReference" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID" mode="M15" priority="1027">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cac:InvoiceDocumentReference/cbc:IssueDate)" />
+      <xsl:when test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and               (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:InvoiceDocumentReference/cbc:IssueDate)">
-          <xsl:attribute name="id">RS-R-007</xsl:attribute>
+        <svrl:failed-assert test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))">
+          <xsl:attribute name="id">RSR-11</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-007]-Svaka referenca na prethodni dokument (BG-3) treba da sadrži datum izdavanja prethodnoe fakture (BT-26).</svrl:text>
+          <svrl:text>[RSR-11]-PIB prodavca (BT-31) treba da ima prefiks RS i nakon toga 9 ili 13 cifara</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme[normalize-space(upper-case(cbc:ID)) != 'VAT']" mode="M15" priority="1026">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme[normalize-space(upper-case(cbc:ID)) != 'VAT']" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="upper-case(normalize-space(cbc:ID)) = 'RS-VAT-STATUS'" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="upper-case(normalize-space(cbc:ID)) = 'RS-VAT-STATUS'">
+          <xsl:attribute name="id">RSR-12</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-12]-Identifikatora registracije poreza na strani prodavca (BT-32) u UBL formatu treba da ima PartyTaxScheme ID sa vrednošću RS-VAT-STATUS</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15615,45 +15708,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="not (cac:InvoicePeriod/cbc:DescriptionCode = '432') or exists(/ubl:Invoice/cbc:DueDate | /cn:CreditNote/cac:PaymentMeans/cbc:PaymentDueDate)" />
+      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="not (cac:InvoicePeriod/cbc:DescriptionCode = '432') or exists(/ubl:Invoice/cbc:DueDate | /cn:CreditNote/cac:PaymentMeans/cbc:PaymentDueDate)">
-          <xsl:attribute name="id">RS-R-008</xsl:attribute>
+        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID)">
+          <xsl:attribute name="id">RSR-13</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-008]-Kada šifra datuma poreske obaveze (BT-8) određuje da poreska obaveza nastaje prema datumu plaćanja (šifra 432) tada treba da je naveden datum dospeća plaćanja (BT-9)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID)">
-          <xsl:attribute name="id">RS-R-009</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-008]-Faktura treba da sadrži PIB prodavca (BT-31)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) != 'VAT']/cbc:CompanyID)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) != 'VAT']/cbc:CompanyID)">
-          <xsl:attribute name="id">RS-R-010</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-010]-Faktura treba da sadrži identifikator registracije poreza na strani prodavca (BT-32)</svrl:text>
+          <svrl:text>[RSR-13]-Faktura treba da sadrži elektronsku adresu prodavca (BT-34)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15661,20 +15724,20 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme[normalize-space(upper-case(cbc:ID)) != 'VAT']" mode="M15" priority="1024">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme[normalize-space(upper-case(cbc:ID)) != 'VAT']" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" mode="M15" priority="1024">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="upper-case(normalize-space(cbc:ID)) = 'RS-VAT-STATUS'" />
+      <xsl:when test="normalize-space(@schemeID) = '9948'" />
       <xsl:otherwise>
-        <svrl:failed-assert test="upper-case(normalize-space(cbc:ID)) = 'RS-VAT-STATUS'">
-          <xsl:attribute name="id">RS-SR-001</xsl:attribute>
+        <svrl:failed-assert test="normalize-space(@schemeID) = '9948'">
+          <xsl:attribute name="id">RSR-14</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-SR-001]-Kod identifikatora registracije poreza na strani prodavca treba da se koristi PartyTaxScheme ID sa vrednošću RS-VAT-STATUS</svrl:text>
+          <svrl:text>[RSR-14]-Elektronska adresa prodavca (BT-34) treba da ima identifikator šeme '9948'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15682,20 +15745,20 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID" mode="M15" priority="1023">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID" />
+<xsl:template match="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" mode="M15" priority="1023">
+    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and               (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))" />
+      <xsl:when test="concat('RS',normalize-space(.)) =               normalize-space(upper-case(../cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))">
-          <xsl:attribute name="id">RS-R-011</xsl:attribute>
+        <svrl:failed-assert test="concat('RS',normalize-space(.)) = normalize-space(upper-case(../cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID))">
+          <xsl:attribute name="id">RSR-15</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-011]-PIB prodavca (BT-31) treba da ima prefiks RS i nakon toga 9 ili 13 cifara</svrl:text>
+          <svrl:text>[RSR-15]-Elektronska adresa prodavca (BT-34) treba da sadrži PIB prodavca (BT-31) bez prefiksa 'RS'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15708,15 +15771,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID)" />
+      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cbc:EndpointID)">
-          <xsl:attribute name="id">RS-R-012</xsl:attribute>
+        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName)">
+          <xsl:attribute name="id">RSR-16</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-012]-Faktura treba da sadrži elektronsku adresu prodavca (BT-34)</svrl:text>
+          <svrl:text>[RSR-16]-Faktura treba da sadrži mesto prodavca (BT-37)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15724,20 +15787,20 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" mode="M15" priority="1021">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" />
+<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1021">
+    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="normalize-space(@schemeID) = '9948'" />
+      <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)" />
       <xsl:otherwise>
-        <svrl:failed-assert test="normalize-space(@schemeID) = '9948'">
-          <xsl:attribute name="id">RS-R-13</xsl:attribute>
+        <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)">
+          <xsl:attribute name="id">RSR-17</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-013]-Elektronska adresa prodavca (BT-34) treba da ima identifikator šeme '9948'</svrl:text>
+          <svrl:text>[RSR-17]-Faktura treba da sadrži matični broj kupca (BT-47)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15745,20 +15808,35 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" mode="M15" priority="1020">
-    <svrl:fired-rule context="cac:AccountingSupplierParty/cac:Party/cbc:EndpointID" />
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID" mode="M15" priority="1020">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID" />
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="concat('RS',normalize-space(.)) =               normalize-space(upper-case(../cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID))" />
+      <xsl:when test="not(exists(@schemeID))" />
       <xsl:otherwise>
-        <svrl:failed-assert test="concat('RS',normalize-space(.)) = normalize-space(upper-case(../cac:PartyTaxScheme[normalize-space(upper-case(cac:TaxScheme/cbc:ID)) = 'VAT']/cbc:CompanyID))">
-          <xsl:attribute name="id">RS-R-14</xsl:attribute>
+        <svrl:failed-assert test="not(exists(@schemeID))">
+          <xsl:attribute name="id">RSR-18</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-014]-Elektronska adresa prodavca (BT-34) treba da sadrži PIB prodavca (BT-31) bez prefiksa 'RS'</svrl:text>
+          <svrl:text>[RSR-18]-Matični broj kupca (BT-47) ne treba da ima identifikator šeme</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(matches(normalize-space(.),'^[0-9]+$')) and               (contains(' 8 13 ', concat(' ', string-length(normalize-space(.)),' ')))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(matches(normalize-space(.),'^[0-9]+$')) and (contains(' 8 13 ', concat(' ', string-length(normalize-space(.)),' ')))">
+          <xsl:attribute name="id">RSR-19</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-19]-Matični broj kupca (BT-47) treba da ima 8 ili 13 cifara</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15771,93 +15849,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName)">
-          <xsl:attribute name="id">RS-R-015</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-015]-Faktura treba da sadrži mesto prodavca (BT-37)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1018">
-    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID)">
-          <xsl:attribute name="id">RS-R-016</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-016]-Faktura treba da sadrži matični broj kupca (BT-47)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID" mode="M15" priority="1017">
-    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="not(exists(@schemeID))" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="not(exists(@schemeID))">
-          <xsl:attribute name="id">RS-R-17</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-017]-Matični broj kupca (BT-47) ne treba da ima identifikator šeme</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="(matches(normalize-space(.),'^[0-9]+$')) and               (contains(' 8 13 ', concat(' ', string-length(normalize-space(.)),' ')))" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="(matches(normalize-space(.),'^[0-9]+$')) and (contains(' 8 13 ', concat(' ', string-length(normalize-space(.)),' ')))">
-          <xsl:attribute name="id">RS-R-018</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-018]-Matični broj kupca (BT-47)  treba da ima 8 ili 13 cifara</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1016">
-    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
-
-		<!--ASSERT -->
-<xsl:choose>
       <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID)">
-          <xsl:attribute name="id">RS-R-019</xsl:attribute>
+          <xsl:attribute name="id">RSR-20</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-019]-Faktura treba da sadrži PIB kupca (BT-48)</svrl:text>
+          <svrl:text>[RSR-20]-Faktura treba da sadrži PIB kupca (BT-48)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15865,7 +15865,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID" mode="M15" priority="1015">
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID" mode="M15" priority="1018">
     <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID" />
 
 		<!--ASSERT -->
@@ -15873,12 +15873,75 @@
       <xsl:when test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and               (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))">
-          <xsl:attribute name="id">RS-R-020</xsl:attribute>
+          <xsl:attribute name="id">RSR-21</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-020]-PIB kupca (BT-48) treba da ima prefiks RS i nakon toga 9 ili 13 cifara</svrl:text>
+          <svrl:text>[RSR-21]-PIB kupca (BT-48) treba da ima prefiks RS i nakon toga 9 ili 13 cifara</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1017">
+    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID)">
+          <xsl:attribute name="id">RSR-22</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-22]-Faktura treba da sadrži elektronsku adresu kupca (BT-49)</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" mode="M15" priority="1016">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="normalize-space(@schemeID) = '9948'" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="normalize-space(@schemeID) = '9948'">
+          <xsl:attribute name="id">RSR-23</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-23]-Elektronska adresa kupca (BT-49) treba da ima identifikator šeme '9948'</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" mode="M15" priority="1015">
+    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="concat('RS',normalize-space(.)) =               normalize-space(upper-case(../cac:PartyTaxScheme/cbc:CompanyID))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="concat('RS',normalize-space(.)) = normalize-space(upper-case(../cac:PartyTaxScheme/cbc:CompanyID))">
+          <xsl:attribute name="id">RSR-24</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-24]-Elektronska adresa kupca (BT-49) treba da sadrži PIB kupca (BT-48) bez prefiksa 'RS'</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15891,78 +15954,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cbc:EndpointID)">
-          <xsl:attribute name="id">RS-R-021</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-021]-Faktura treba da sadrži elektronsku adresu kupca (BT-49)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" mode="M15" priority="1013">
-    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="normalize-space(@schemeID) = '9948'" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="normalize-space(@schemeID) = '9948'">
-          <xsl:attribute name="id">RS-R-22</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-022]-Elektronska adresa kupca (BT-49) treba da ima identifikator šeme '9948'</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" mode="M15" priority="1012">
-    <svrl:fired-rule context="cac:AccountingCustomerParty/cac:Party/cbc:EndpointID" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="concat('RS',normalize-space(.)) =               normalize-space(upper-case(../cac:PartyTaxScheme/cbc:CompanyID))" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="concat('RS',normalize-space(.)) = normalize-space(upper-case(../cac:PartyTaxScheme/cbc:CompanyID))">
-          <xsl:attribute name="id">RS-R-23</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-023]-Elektronska adresa kupca (BT-49) treba da sadrži PIB kupca (BT-48) bez prefiksa 'RS'</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1011">
-    <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
-
-		<!--ASSERT -->
-<xsl:choose>
       <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName)">
-          <xsl:attribute name="id">RS-R-024</xsl:attribute>
+          <xsl:attribute name="id">RSR-25</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-024]-Faktura treba da sadrži mesto kupca (BT-52)</svrl:text>
+          <svrl:text>[RSR-25]-Faktura treba da sadrži mesto kupca (BT-52)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15970,7 +15970,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1010">
+<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1013">
     <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
 
 		<!--ASSERT -->
@@ -15978,12 +15978,12 @@
       <xsl:when test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone)">
-          <xsl:attribute name="id">RS-R-025</xsl:attribute>
+          <xsl:attribute name="id">RSR-26</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-025]-Faktura treba da sadrži poštanski broj kupca (BT-52)</svrl:text>
+          <svrl:text>[RSR-26]-Faktura treba da sadrži poštanski broj kupca (BT-53)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -15991,7 +15991,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/ubl:Invoice/cac:PayeeParty | /cn:CreditNote/cac:PayeeParty" mode="M15" priority="1009">
+<xsl:template match="/ubl:Invoice/cac:PayeeParty | /cn:CreditNote/cac:PayeeParty" mode="M15" priority="1012">
     <svrl:fired-rule context="/ubl:Invoice/cac:PayeeParty | /cn:CreditNote/cac:PayeeParty" />
 
 		<!--ASSERT -->
@@ -15999,12 +15999,12 @@
       <xsl:when test="count(cac:PartyLegalEntity/cbc:CompanyID) = 1" />
       <xsl:otherwise>
         <svrl:failed-assert test="count(cac:PartyLegalEntity/cbc:CompanyID) = 1">
-          <xsl:attribute name="id">RS-R-026</xsl:attribute>
+          <xsl:attribute name="id">RSR-27</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-026]-Primalac plaćanja (BG-10) treba da ima tačno jedan matični broj primaoca plaćanja (BT-61)</svrl:text>
+          <svrl:text>[RSR-27]-Primalac plaćanja (BG-10) treba da ima tačno jedan matični broj primaoca plaćanja (BT-61)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16012,7 +16012,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID" mode="M15" priority="1008">
+<xsl:template match="cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID" mode="M15" priority="1011">
     <svrl:fired-rule context="cac:PayeeParty/cac:PartyLegalEntity/cbc:CompanyID" />
 
 		<!--ASSERT -->
@@ -16020,12 +16020,75 @@
       <xsl:when test="(matches(normalize-space(.),'^[0-9]+$')) and               (contains(' 8 13 ', concat(' ', string-length(normalize-space(.)),' ')))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(matches(normalize-space(.),'^[0-9]+$')) and (contains(' 8 13 ', concat(' ', string-length(normalize-space(.)),' ')))">
-          <xsl:attribute name="id">RS-R-27</xsl:attribute>
+          <xsl:attribute name="id">RSR-28</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-027]-Matični broj primaoca plaćanja (BT-61) treba da ima 8 ili 13 cifara</svrl:text>
+          <svrl:text>[RSR-28]-Matični broj primaoca plaćanja (BT-61) treba da ima 8 ili 13 cifara</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" mode="M15" priority="1010">
+    <svrl:fired-rule context="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:PartyTaxScheme/cbc:CompanyID)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID)">
+          <xsl:attribute name="id">RSR-29</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-29]-Poreski punomoćnik prodavca (BG-11) treba da sadrži PIB poreskog punomoćnika (BT-63)</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID" mode="M15" priority="1009">
+    <svrl:fired-rule context="cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and               (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))">
+          <xsl:attribute name="id">RSR-30</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-30]-PIB poreskog punomoćnika prodavca (BT-63) treba da ima prefiks RS i nakon toga 9 ili 13 cifara</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" mode="M15" priority="1008">
+    <svrl:fired-rule context="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="exists(cac:PostalAddress/cbc:CityName)" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="exists(cac:PostalAddress/cbc:CityName)">
+          <xsl:attribute name="id">RSR-31</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-31]-Poreski punomoćnik prodavca (BG-11) treba da sadrži mesto poreskog punomoćnika (BT-66)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16038,78 +16101,15 @@
 
 		<!--ASSERT -->
 <xsl:choose>
-      <xsl:when test="exists(cac:PartyTaxScheme/cbc:CompanyID)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:PartyTaxScheme/cbc:CompanyID)">
-          <xsl:attribute name="id">RS-R-028</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-28]-Poreski punomoćnik prodavca (BG-11) treba da sadrži PIB poreskog punomoćnika (BT-63)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID" mode="M15" priority="1006">
-    <svrl:fired-rule context="cac:TaxRepresentativeParty/cac:PartyTaxScheme/cbc:CompanyID" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and               (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="(matches(normalize-space(upper-case(.)),'^RS[0-9]+$')) and (contains(' 9 13 ', concat(' ', string-length(substring(normalize-space(.),3)),' ')))">
-          <xsl:attribute name="id">RS-R-029</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-029]-PIB poreskog punomoćnika prodavca (BT-48) treba da ima prefiks RS i nakon toga 9 ili 13 cifara</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" mode="M15" priority="1005">
-    <svrl:fired-rule context="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="exists(cac:PostalAddress/cbc:CityName)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="exists(cac:PostalAddress/cbc:CityName)">
-          <xsl:attribute name="id">RS-R-030</xsl:attribute>
-          <xsl:attribute name="flag">fatal</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>[RS-R-030]-Poreski punomoćnik prodavca (BG-11) treba da sadrži mesto poreskog punomoćnika (BT-66)</svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates mode="M15" select="@*|*" />
-  </xsl:template>
-
-	<!--RULE -->
-<xsl:template match="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" mode="M15" priority="1004">
-    <svrl:fired-rule context="/ubl:Invoice/cac:TaxRepresentativeParty | /cn:CreditNote/cac:TaxRepresentativeParty" />
-
-		<!--ASSERT -->
-<xsl:choose>
       <xsl:when test="exists(cac:PostalAddress/cbc:PostalZone)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cac:PostalAddress/cbc:PostalZone)">
-          <xsl:attribute name="id">RS-R-031</xsl:attribute>
+          <xsl:attribute name="id">RSR-32</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-031]-Poreski punomoćnik prodavca (BG-11) treba da sadrži poštanski broj poreskog punomoćnika (BT-67)</svrl:text>
+          <svrl:text>[RSR-32]-Poreski punomoćnik prodavca (BG-11) treba da sadrži poštanski broj poreskog punomoćnika (BT-67)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16117,7 +16117,7 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1003">
+<xsl:template match="/ubl:Invoice | /cn:CreditNote" mode="M15" priority="1006">
     <svrl:fired-rule context="/ubl:Invoice | /cn:CreditNote" />
 
 		<!--ASSERT -->
@@ -16125,12 +16125,12 @@
       <xsl:when test="not(cac:InvoicePeriod/cbc:DescriptionCode = '35') or exists(cac:Delivery/cbc:ActualDeliveryDate)" />
       <xsl:otherwise>
         <svrl:failed-assert test="not(cac:InvoicePeriod/cbc:DescriptionCode = '35') or exists(cac:Delivery/cbc:ActualDeliveryDate)">
-          <xsl:attribute name="id">RS-R-032</xsl:attribute>
+          <xsl:attribute name="id">RSR-33</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-R-032]-Kada šifra datuma poreske obaveze (BT-8) određuje da poreska obaveza nastaje prema datumu prometa (šifra 35) tada treba da je naveden datum prometa (BT-72)</svrl:text>
+          <svrl:text>[RSR-33]-Kada šifra datuma poreske obaveze (BT-8) određuje da poreska obaveza nastaje prema datumu prometa (šifra 35) tada treba da je naveden datum prometa (BT-72)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16138,20 +16138,20 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:TaxCategory/cbc:ID" mode="M15" priority="1002">
-    <svrl:fired-rule context="cac:TaxCategory/cbc:ID" />
+<xsl:template match="/ubl:Invoice/cac:AllowanceCharge/cac:TaxCategory/cbc:ID | /cn:CreditNote/cac:AllowanceCharge/cac:TaxCategory/cbc:ID" mode="M15" priority="1005">
+    <svrl:fired-rule context="/ubl:Invoice/cac:AllowanceCharge/cac:TaxCategory/cbc:ID | /cn:CreditNote/cac:AllowanceCharge/cac:TaxCategory/cbc:ID" />
 
 		<!--ASSERT -->
 <xsl:choose>
       <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )" />
       <xsl:otherwise>
         <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )">
-          <xsl:attribute name="id">RS-BR-CL-17</xsl:attribute>
+          <xsl:attribute name="id">RSR-34</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CL-17]-Šifra kategorije PDV-a treba da bude jedna od S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
+          <svrl:text>[RSR-34]-Šifra kategorije PDV-a za popust/trošak na nivou dokumneta (BT-95/BT-102) treba da bude jedna od: S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16159,7 +16159,28 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="cac:ClassifiedTaxCategory/cbc:ID" mode="M15" priority="1001">
+<xsl:template match="/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID | /cn:CreditNote/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID" mode="M15" priority="1004">
+    <svrl:fired-rule context="/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID | /cn:CreditNote/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )">
+          <xsl:attribute name="id">RSR-35</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSR-35]-Šifra kategorije PDV-a (BT-118) treba da bude jedna od: S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="cac:ClassifiedTaxCategory/cbc:ID" mode="M15" priority="1003">
     <svrl:fired-rule context="cac:ClassifiedTaxCategory/cbc:ID" />
 
 		<!--ASSERT -->
@@ -16167,12 +16188,54 @@
       <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )" />
       <xsl:otherwise>
         <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )">
-          <xsl:attribute name="id">RS-BR-CL-18</xsl:attribute>
+          <xsl:attribute name="id">RSR-36</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[BR-CL-18]-Šifra kategorije PDV-a treba da bude jedna od S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
+          <svrl:text>[RSR-36]-Šifra kategorije PDV-a za stavku (BT-151) treba da bude jedna od: S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="sbt:SrbDtExt/sbt:InvoicedPrepaymentAmmount/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID" mode="M15" priority="1002">
+    <svrl:fired-rule context="sbt:SrbDtExt/sbt:InvoicedPrepaymentAmmount/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )">
+          <xsl:attribute name="id">RSE-01</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSE-01]-Šifra kategorije PDV-a na avansu (BT-Е4) treba da bude jedna od: S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
+        </svrl:failed-assert>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates mode="M15" select="@*|*" />
+  </xsl:template>
+
+	<!--RULE -->
+<xsl:template match="sbt:SrbDtExt/sbt:ReducedTotals/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID" mode="M15" priority="1001">
+    <svrl:fired-rule context="sbt:SrbDtExt/sbt:ReducedTotals/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID" />
+
+		<!--ASSERT -->
+<xsl:choose>
+      <xsl:when test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )" />
+      <xsl:otherwise>
+        <svrl:failed-assert test="( ( not(contains(normalize-space(.),' ')) and contains( ' S AE Z E O R OE SS N ',concat(' ',normalize-space(.),' ') ) ) )">
+          <xsl:attribute name="id">RSE-02</xsl:attribute>
+          <xsl:attribute name="flag">fatal</xsl:attribute>
+          <xsl:attribute name="location">
+            <xsl:apply-templates mode="schematron-select-full-path" select="." />
+          </xsl:attribute>
+          <svrl:text>[RSE-02]-Šifra kategorije PDV-a na umanjenom iznosu (BT-Е8) treba da bude jedna od: S, AE, Z, E, O, R, OE, SS ili N</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16188,12 +16251,12 @@
       <xsl:when test="(exists(/ubl:Invoice) and (xs:decimal(cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount) =                xs:decimal(/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount) - xs:decimal(/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PrepaidAmount))) or             (exists(/cn:CreditNote) and (xs:decimal(cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount) =                xs:decimal(/cn:CreditNote/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount) - xs:decimal(/cn:CreditNote/cac:LegalMonetaryTotal/cbc:PrepaidAmount)))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(exists(/ubl:Invoice) and (xs:decimal(cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount) = xs:decimal(/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount) - xs:decimal(/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PrepaidAmount))) or (exists(/cn:CreditNote) and (xs:decimal(cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount) = xs:decimal(/cn:CreditNote/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount) - xs:decimal(/cn:CreditNote/cac:LegalMonetaryTotal/cbc:PrepaidAmount)))">
-          <xsl:attribute name="id">RS-ER-001</xsl:attribute>
+          <xsl:attribute name="id">RSE-03</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-ER-001]-Umanjen ukupan iznos bez PDV-a (BT-Е10) treba da bude jednak razlici ukupnog iznosa sa PDV-om (BT-112) i plaćenog iznosa (BT-113)</svrl:text>
+          <svrl:text>[RSE-03]-Umanjen ukupan iznos bez PDV-a (BT-Е10) treba da bude jednak razlici ukupnog iznosa sa PDV-om (BT-112) i plaćenog iznosa (BT-113)</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16216,12 +16279,12 @@
       <xsl:when test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']) or                  exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R'])) and                 (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']) = 1)) or                  (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']) and                    not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']))" />
       <xsl:otherwise>
         <svrl:failed-assert test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']) or exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R'])) and (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']) = 1)) or (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']) and not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'R']))">
-          <xsl:attribute name="id">RS-BR-X-01</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-01</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV katehotije (BT-151, BT-95 odnosno BT-102) jednakom 'R' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'R'.</svrl:text>
+          <svrl:text>[RSK-R-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV kategorije (BT-151, BT-95 odnosno BT-102) jednakom 'R' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'R'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16237,12 +16300,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-05</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-05</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-05]-Stafka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'R', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
+          <svrl:text>[RSK-R-05]-Stavka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'R', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16258,12 +16321,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-06</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-06</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'R', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-R-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'R', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16279,12 +16342,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-07</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-07</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'R', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-R-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'R', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16300,12 +16363,12 @@
       <xsl:when test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='R']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or              (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='R']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))">
-          <xsl:attribute name="id">RS-BR-X-08</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-08</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'R', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'R'.</svrl:text>
+          <svrl:text>[RSK-R-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'R', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'R'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16315,12 +16378,12 @@
       <xsl:when test="xs:decimal(../cbc:TaxAmount) = 0" />
       <xsl:otherwise>
         <svrl:failed-assert test="xs:decimal(../cbc:TaxAmount) = 0">
-          <xsl:attribute name="id">RS-BR-X-09</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-09</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-09]-Iznos poreza za kategoriju PDV-a 'R' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
+          <svrl:text>[RSK-R-09]-Iznos poreza za kategoriju PDV-a 'R' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16330,12 +16393,12 @@
       <xsl:when test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)">
-          <xsl:attribute name="id">RS-BR-X-10</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-10</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-R-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'R' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
+          <svrl:text>[RSK-R-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'R' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16358,12 +16421,12 @@
       <xsl:when test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']) or                  exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE'])) and                 (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']) = 1)) or                  (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']) and                    not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']))" />
       <xsl:otherwise>
         <svrl:failed-assert test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']) or exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE'])) and (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']) = 1)) or (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']) and not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'OE']))">
-          <xsl:attribute name="id">RS-BR-X-01</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-01</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV katehotije (BT-151, BT-95 odnosno BT-102) jednakom 'OE' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'OE'.</svrl:text>
+          <svrl:text>[RSK-OE-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV kategorije (BT-151, BT-95 odnosno BT-102) jednakom 'OE' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'OE'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16379,12 +16442,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-05</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-05</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-05]-Stafka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'OE', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
+          <svrl:text>[RSK-OE-05]-Stavka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'OE', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16400,12 +16463,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-06</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-06</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'OE', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-OE-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'OE', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16421,12 +16484,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-07</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-07</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'OE', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-OE-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'OE', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16442,12 +16505,12 @@
       <xsl:when test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='OE']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or              (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='OE']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))">
-          <xsl:attribute name="id">RS-BR-X-08</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-08</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'OE', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'OE'.</svrl:text>
+          <svrl:text>[RSK-OE-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'OE', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'OE'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16457,12 +16520,12 @@
       <xsl:when test="xs:decimal(../cbc:TaxAmount) = 0" />
       <xsl:otherwise>
         <svrl:failed-assert test="xs:decimal(../cbc:TaxAmount) = 0">
-          <xsl:attribute name="id">RS-BR-X-09</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-09</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-09]-Iznos poreza za kategoriju PDV-a 'OE' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
+          <svrl:text>[RSK-OE-09]-Iznos poreza za kategoriju PDV-a 'OE' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16472,12 +16535,12 @@
       <xsl:when test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)">
-          <xsl:attribute name="id">RS-BR-X-10</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-10</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-OE-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'OE' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
+          <svrl:text>[RSK-OE-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'OE' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16500,12 +16563,12 @@
       <xsl:when test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']) or                  exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS'])) and                 (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']) = 1)) or                  (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']) and                    not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']))" />
       <xsl:otherwise>
         <svrl:failed-assert test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']) or exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS'])) and (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']) = 1)) or (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']) and not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'SS']))">
-          <xsl:attribute name="id">RS-BR-X-01</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-01</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV katehotije (BT-151, BT-95 odnosno BT-102) jednakom 'SS' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'SS'.</svrl:text>
+          <svrl:text>[RSK-SS-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV kategorije (BT-151, BT-95 odnosno BT-102) jednakom 'SS' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'SS'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16521,12 +16584,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-05</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-05</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-05]-Stafka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'SS', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
+          <svrl:text>[RSK-SS-05]-Stavka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'SS', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16542,12 +16605,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-06</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-06</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'SS', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-SS-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'SS', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16563,12 +16626,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-07</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-07</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'SS', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-SS-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'SS', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16584,12 +16647,12 @@
       <xsl:when test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='SS']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or              (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='SS']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))">
-          <xsl:attribute name="id">RS-BR-X-08</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-08</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'SS', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'SS'.</svrl:text>
+          <svrl:text>[RSK-SS-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'SS', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'SS'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16599,12 +16662,12 @@
       <xsl:when test="xs:decimal(../cbc:TaxAmount) = 0" />
       <xsl:otherwise>
         <svrl:failed-assert test="xs:decimal(../cbc:TaxAmount) = 0">
-          <xsl:attribute name="id">RS-BR-X-09</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-09</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-09]-Iznos poreza za kategoriju PDV-a 'SS' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
+          <svrl:text>[RSK-SS-09]-Iznos poreza za kategoriju PDV-a 'SS' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16614,12 +16677,12 @@
       <xsl:when test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)">
-          <xsl:attribute name="id">RS-BR-X-10</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-10</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-SS-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'SS' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
+          <svrl:text>[RSK-SS-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'SS' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16642,12 +16705,12 @@
       <xsl:when test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']) or                  exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N'])) and                 (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']) = 1)) or                  (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']) and                    not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']))" />
       <xsl:otherwise>
         <svrl:failed-assert test="((exists(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']) or exists(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N'])) and (count(cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']) = 1)) or (not(//cac:TaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']) and not(//cac:ClassifiedTaxCategory[cac:TaxScheme/normalize-space(upper-case(cbc:ID))='VAT']/cbc:ID[normalize-space(.) = 'N']))">
-          <xsl:attribute name="id">RS-BR-X-01</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-01</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV katehotije (BT-151, BT-95 odnosno BT-102) jednakom 'N' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'N'.</svrl:text>
+          <svrl:text>[RSK-N-01]-Faktura koja sadrži stavku fakture (BG-25), popust na nivou dokumenta (BG-20) ili troškove na nivou dokumenta (BG-21) sa šifrom PDV kategorije (BT-151, BT-95 odnosno BT-102) jednakom 'N' treba da sadrži tačno jedan poreski međuzbir (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'N'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16663,12 +16726,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-05</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-05</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-05]-Stafka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'N', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
+          <svrl:text>[RSK-N-05]-Stavka fakture (BG-25) sa šifrom PDV kategorije (BT-151) jednakom 'N', treba da ima stopu PDV-a (BT-152) jednaku nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16684,12 +16747,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-06</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-06</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'N', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-N-06]-U popustu na nivou dokumenta (BG-20) za šifru kategorije PDV-a (BT-95) jednaku 'N', stopa PDV-a (BT-96) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16705,12 +16768,12 @@
       <xsl:when test="(xs:decimal(cbc:Percent) = 0)" />
       <xsl:otherwise>
         <svrl:failed-assert test="(xs:decimal(cbc:Percent) = 0)">
-          <xsl:attribute name="id">RS-BR-X-07</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-07</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'N', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
+          <svrl:text>[RSK-N-07]-U trošku na nivou dokumenta (BG-21) sa kategorijom PDV-a (BT-102) jednakom 'N', stopa PDV-a (BT-103) treba da je nula.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16726,12 +16789,12 @@
       <xsl:when test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='N']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or              (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = (               sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) +                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) -                sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))" />
       <xsl:otherwise>
         <svrl:failed-assert test="(exists(//cac:InvoiceLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:InvoiceLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='N']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount))))) or (exists(//cac:CreditNoteLine) and (xs:decimal(../cbc:TaxableAmount) = ( sum(../../../cac:CreditNoteLine[cac:Item/cac:ClassifiedTaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:LineExtensionAmount)) + sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=true()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)) - sum(../../../cac:AllowanceCharge[cbc:ChargeIndicator=false()][cac:TaxCategory/normalize-space(cbc:ID)='E']/xs:decimal(cbc:Amount)))))">
-          <xsl:attribute name="id">RS-BR-X-08</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-08</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'N', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'N'.</svrl:text>
+          <svrl:text>[RSK-N-08]-U poreskom međuzbiru (BG-23) sa šifrom kategorije PDV-a (BT-118) jednakom 'N', iznos osnovice (BT-116) treba da je jednak zbiru neto iznosa stavki (BT-131) umanjenog za zbir popusta na nivou dokumenta (BT-92) i uvećanog za zbir troškova na nivou dokumenta (BT-99) gde je šifra kategorije PDV-a (BT-151, BT-95, BT-102) jednaka 'N'.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16741,12 +16804,12 @@
       <xsl:when test="xs:decimal(../cbc:TaxAmount) = 0" />
       <xsl:otherwise>
         <svrl:failed-assert test="xs:decimal(../cbc:TaxAmount) = 0">
-          <xsl:attribute name="id">RS-BR-X-09</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-09</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-09]-Iznos poreza za kategoriju PDV-a 'N' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
+          <svrl:text>[RSK-N-09]-Iznos poreza za kategoriju PDV-a 'N' (BT-117, BT-118) u poreskom međuzbiru (BG-23) treba da je jednak nuli.</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
@@ -16756,12 +16819,12 @@
       <xsl:when test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)" />
       <xsl:otherwise>
         <svrl:failed-assert test="exists(cbc:TaxExemptionReason) or exists(cbc:TaxExemptionReasonCode)">
-          <xsl:attribute name="id">RS-BR-X-10</xsl:attribute>
+          <xsl:attribute name="id">RSK-X-10</xsl:attribute>
           <xsl:attribute name="flag">fatal</xsl:attribute>
           <xsl:attribute name="location">
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
-          <svrl:text>[RS-BR-N-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'N' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
+          <svrl:text>[RSK-N-10]-Poreski međuzbir (BG-23) sa kategorijom PDV-a (BT-118) jednakom 'N' treba da sadrži šifru ili tekst osnova izuzeće od PDV (BT-121, BT-120).</svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
